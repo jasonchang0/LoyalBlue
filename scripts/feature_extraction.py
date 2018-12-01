@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import json
 import os
 import glob
@@ -44,16 +45,27 @@ airports_df.rename(index=str, columns={'Destination_airport': 'Weighed_factor'},
 
 # axis 1 drops columns, 0 will drop rows
 airports_df.drop(['Destination_population'], axis=1, inplace=True)
+airports_df.drop(['Weighed_factor'], axis=1, inplace=True)
 
 # normalize the features
-airports_df[airports_df.columns[2:]] = airports_df[airports_df.columns[2:]].mul(airports_df['Weighed_factor'], axis=0)
+# airports_df[airports_df.columns[2:]] = airports_df[airports_df.columns[2:]].mul(airports_df['Weighed_factor'], axis=0)
 
-airports_df = airports_df.groupby('Origin_airport').sum()
+# airports_df.drop(['Origin_population'], axis=1, inplace=True)
+# origin_pop = dict(zip(airports_df.Origin_aiport, airports_df.Origin_population))
+
+airports_df = airports_df.groupby(['Origin_airport']).agg({'Origin_population': np.mean, 'Passengers': np.sum,
+                                                           'Seats': np.sum, 'Flights': np.sum})
+
+airports_df['Origin_population'] = airports_df['Origin_population'].astype(int)
+
 # airports_df['Origin_airport'] = airports_df.index.values
 
 airports_df.reset_index(inplace=True)
 print(airports_df.head())
 
 airports_df.to_csv('airport_features.csv', index=False)
+
+
+
 
 
