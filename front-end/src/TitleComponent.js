@@ -13,7 +13,7 @@ class TitleComponent extends Component {
     super(props);
   }
   buttonClick = () => {
-    this.props.onTitleClick(false);            
+    this.props.onTitleClick('login');            
   }
   render() {
     return (
