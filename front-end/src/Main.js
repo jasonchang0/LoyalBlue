@@ -6,6 +6,7 @@ import VideoBackground2 from './assets/video_bg2.mp4'
 import './App.css';
 import LoginComponent from './LoginComponent';
 import TitleComponent from './TitleComponent';
+import SignupComponent from './SignupComponent';
 
 const style = {
   width: '100vw',
@@ -30,13 +31,13 @@ class Main extends Component {
   constructor(props) {
 		super(props);
 		this.state = {
-			isTitleScreen: true,
+			currentScreen: 'title',
 		};
 		this.handleClick = this.handleClick.bind(this);
   }
   
   handleClick = (title) => {
-    this.setState({isTitleScreen: title});
+    this.setState({currentScreen: title});
   }
 
   state = {
@@ -48,27 +49,44 @@ class Main extends Component {
       autoPlay: true,
       loop: true,
     };
-    if (this.state.isTitleScreen) {
+    if (this.state.currentScreen == 'title') {
 			return (
         <div style={style} >
-        <TitleComponent onTitleClick={this.handleClick}/>
-        <VideoCover
-          style={videoStyle}
-          videoOptions={videoOptions}
-          remeasureOnWindowResize
-          getResizeNotifier={resizeNotifier => {
-            this.setState({
-              resizeNotifier,
-            });
-          }}
-        />
+          <TitleComponent onTitleClick={this.handleClick}/>
+          <VideoCover
+            style={videoStyle}
+            videoOptions={videoOptions}
+            remeasureOnWindowResize
+            getResizeNotifier={resizeNotifier => {
+              this.setState({
+                resizeNotifier,
+              });
+            }}
+          />
         </div>
 				)
-		} else {
+		} else if (this.state.currentScreen == 'login') {
 
 			return (
           <div style={style} >
-            <LoginComponent style={loginStyles}/>
+            <LoginComponent style={loginStyles} onTitleClick={this.handleClick}/>
+            <VideoCover
+              style={videoStyle}
+              videoOptions={videoOptions}
+              remeasureOnWindowResize
+              getResizeNotifier={resizeNotifier => {
+                this.setState({
+                  resizeNotifier,
+                });
+              }}
+            />
+          </div>
+        );
+		} else if (this.state.currentScreen == 'signup') {
+
+			return (
+          <div style={style} >
+            <SignupComponent style={loginStyles}/>
             <VideoCover
               style={videoStyle}
               videoOptions={videoOptions}
