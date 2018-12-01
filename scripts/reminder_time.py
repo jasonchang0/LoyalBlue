@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 import numpy as np
 import googlemaps
 from datetime import datetime, timedelta
@@ -9,7 +9,11 @@ os.chdir('../data')
 
 user_address = 'Payne Whitney Gymnasium, 70 Tower Pkwy, New Haven, CT 06511'
 
-gmaps = googlemaps.Client(key='AIzaSyBCVcHpG94JKXC9tMn23AaaW3i4ga1ICis')
+open_file = open('google_api.pickle', 'rb')
+google_api = pickle.load(open_file)
+open_file.close()
+
+gmaps = googlemaps.Client(key=google_api)
 
 '''
 address: String
@@ -40,8 +44,26 @@ def reminder_time(address, airport, transport, departure):
         pickle.dump(address_book, save_file)
         save_file.close()
 
-    routes = gmaps.directions(origin=address, destination=address_book[airport], departure_time=departure, mode=transport,
-                        traffic_model='best_guess')
+    routes = gmaps.directions(origin=address, destination=address_book[airport], departure_time=departure,
+                              mode=transport,
+                              traffic_model='best_guess')
+
+    # transport time to airport in seconds
+    transport_time = routes[0]['legs'][0]['duration_in_traffic']['value']
+
+    classified = pd.read_csv('airport_features.csv')
+    print(classified.head())
+
+    modeled_airports = [classified.Origin_airport[_] for _ in range(6)]
+    print(modeled_airports)
+
+    airport = classified[classified.Origin_airport == airport]
+
+    model = modeled_airports[int(airport.Labels)]
+    print(model)
+
+    queue_time = pd.read_csv('{}_queue_time.csv'.format(model))
+    print(queue_time.head())
 
     return routes
 
