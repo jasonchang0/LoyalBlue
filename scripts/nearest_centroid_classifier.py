@@ -11,7 +11,7 @@ os.chdir('../data')
 df = pd.read_csv('airport_features.csv')
 
 airports = df['Origin_airport']
-x = df.drop('Origin_airport', axis=1, inplace=False)
+x = df.drop(['Origin_airport', 'Labels'], axis=1, inplace=False)
 
 scaler = preprocessing.StandardScaler()
 x = scaler.fit_transform(x)
