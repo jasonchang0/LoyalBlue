@@ -4,9 +4,9 @@ import fire from './config/Fire';
 import VideoBackground from './assets/video_bg.mp4'
 import VideoBackground2 from './assets/video_bg2.mp4'
 import './App.css';
-import LoginComponent from './LoginComponent';
-import TitleComponent from './TitleComponent';
-import SignupComponent from './SignupComponent';
+import LoginComponent from './components/LoginComponent';
+import TitleComponent from './components/TitleComponent';
+import SignupComponent from './components/SignupComponent';
 
 const style = {
   width: '100vw',

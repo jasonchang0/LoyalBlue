@@ -1,5 +1,36 @@
 import React, { Component } from 'react';
 import fire from './config/Fire';
+import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import Navbar from './common/Navbar'
+import HorizontalForm from './components/HorizontalForm';
+import './Home.css'
+
+const mapStyle = {
+  height: '50%',
+  width: '60%',
+  position: 'relative !important',
+  left: '0',
+  right: '0',
+  margin: 'auto',
+}
+const divStyle = {
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column'
+}
+
+const headerStyle = {
+  color: 'white'
+}
+
+const style = {
+  width: '100vw',
+  height: '100vh',
+  zIndex: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 
 class Home extends Component {
 
@@ -9,16 +40,30 @@ class Home extends Component {
   }
 
   logout() {
-      fire.auth().signOut();
+    fire.auth().signOut();
   }
 
   render() {
     return (
-        <div className="col-md-6">
-            <h1>Home Page</h1>
-            <button onClick={this.logout}>Logout</button>
-        </div>
+      <div>
+        <Navbar/>
+      <div style={divStyle}>
+      
+      <Map
+              style={mapStyle}
+      google={this.props.google}
+      initialCenter={{
+          lat: 42.39,
+          lng: -72.52
+      }}>
+     
+  </Map> 
+  <HorizontalForm/></div>
+      </div>
+
     );
   }
 }
-export default Home;
+export default GoogleApiWrapper({
+  apiKey: ('')
+})(Home)
