@@ -5,7 +5,7 @@ import Navbar from './common/Navbar'
 import HorizontalForm from './components/HorizontalForm';
 import './Home.css'
 import VideoBackground from './assets/video_bg.mp4'
-import VideoCover from 'react-video-cover';
+import airportLatLng from './data/airportLatLng.js';
 
 const mapStyle = {
   marginTop: '15em',
@@ -67,36 +67,87 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.logout.bind(this);
+    this.state = {
+      latLngData: null,
+      selectedAirport: '',
+      showingInfoWindow: false,
+      activeMarker: {},
+      selectedPlace: {},
+      resultText: '',
+    }
   }
+  onMarkerClick = (props, marker, e) =>
+    this.setState({
+      selectedAirport: props.name,
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+  });
 
   logout() {
     fire.auth().signOut();
   }
-
+  componentDidMount() {
+    // Fetch airport data from json
+    var arr = []
+    for (let data in airportLatLng) {
+      arr.push({ 'name': data, 'lat': airportLatLng[data]['lat'], 'lng': airportLatLng[data]['lng'] })
+    }
+    this.setState({
+      latLngData: arr,
+    })
+  }
   render() {
-    const videoOptions = {
-      src: VideoBackground,
-      autoPlay: true,
-      loop: true,
-    };
-    return (
-      <div>
-        <Navbar styles={{ 'marginBottom': '2em' }} />
-        <div style={divStyle}>
-          <Map
-            style={mapStyle}
-            google={this.props.google}
-            initialCenter={{
-              lat: 42.39,
-              lng: -72.52
-            }}>
-          </Map>
-          <HorizontalForm />
+    console.log(this.state.selectedAirport)
+    if (this.state.latLngData != undefined && this.state.selectedAirport != undefined) {
+      return (
+        <div>
+          <Navbar styles={{ 'marginBottom': '2em' }} />
+          <div style={divStyle}>
+            <Map
+              style={mapStyle}
+              google={this.props.google}
+              zoom={4}
+              initialCenter={{
+                lat: 37,
+                lng: -92
+              }}>
+              {this.state.latLngData.map(item =>
+                <Marker
+                  onClick={this.onMarkerClick}
+                  name={item.name}
+                  position={{ lat: item['lat'], lng: item['lng'] }} />
+                  
+              )}
+              <InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}>
+                <div>
+                  <h1>{this.state.selectedPlace.name}</h1>
+                </div>
+            </InfoWindow>
+            <div>
+              <h1>{this.state.selectedPlace.name}</h1>
+            </div>
+            </Map>
+            <HorizontalForm selectedApt={this.state.selectedAirport}/>
+            <div>
+              <h2>{this.state.resultText}</h2>
+            </div>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
 
-    );
+      );
+    } else {
+      return (
+
+        <div>
+        </div>
+
+      );
+    }
+
   }
 }
 export default GoogleApiWrapper({
