@@ -85,7 +85,9 @@ class Home extends Component {
       activeMarker: marker,
       showingInfoWindow: true
   });
-
+  renderResult = (t) => {
+    this.setState({ resultText: t });
+  }
   logout() {
     fire.auth().signOut();
   }
@@ -121,7 +123,6 @@ class Home extends Component {
     })
   }
   render() {
-    console.log(this.state.userPhone)
     if (this.state.latLngData != undefined && this.state.selectedAirport != undefined && this.state.userPhone != undefined) {
       return (
         <div>
@@ -153,9 +154,9 @@ class Home extends Component {
               <h1>{this.state.selectedPlace.name}</h1>
             </div>
             </Map>
-            <HorizontalForm phoneNum={this.state.userPhone} selectedApt={this.state.selectedAirport}/>
+            <HorizontalForm renderTitle={this.renderResult} phoneNum={this.state.userPhone} selectedApt={this.state.selectedAirport}/>
             <div>
-              <h2>{this.state.resultText}</h2>
+              <h3 style={{marginTop:'2em'}}>{this.state.resultText}</h3>
             </div>
           </div>
           <Footer />

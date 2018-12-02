@@ -5,8 +5,7 @@ import './App.css';
 import Logo from '../assets/logo.png'
 
 const imgStyle = {
-    width: '30%',
-    height: '30%'
+
 }
 
 class TitleComponent extends Component {
@@ -22,7 +21,7 @@ class TitleComponent extends Component {
         <div>
             <img style={imgStyle} src={Logo}></img>
         </div>
-        <button type="submit" onClick={this.buttonClick} class="btn btn-primary">Begin loyalBlue</button>
+        <button style={{backgroundColor: '#00205b', borderColor: '#00205b', marginTop:'2em'}} type="submit" onClick={this.buttonClick} class="btn btn-primary">Launch Trip Assistant</button>
     </div>
     );
   }

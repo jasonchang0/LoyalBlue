@@ -33,6 +33,7 @@ class HorizontalForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
+        this.renderMessage = this.renderMessage.bind(this);
         this.state = {
             userInfo: null,
             userPhone: '',
@@ -43,32 +44,37 @@ class HorizontalForm extends Component {
             address: '',
             addressOptions: [],
             options: [],
-            date: null,
+            datetime: null,
             show: false,
+            fullname: '',
+            allowSMS: false,
         }
     }
 
     componentDidMount() {
         fire.auth().onAuthStateChanged((user) => {
-            console.log(user);
             if (user) {
-              this.setState({userInfo: user});
+                this.setState({ userInfo: user });
+                const userRef = fire.database().ref('user');
+                userRef.on('value', (snapshot) => {
+                    for (let userItem in snapshot.val()) {
+                        if (snapshot.val()[userItem] != null) {
+                            if (snapshot.val()[userItem].email === this.state.userInfo.email) {
+                                this.setState({
+                                    userPhone: snapshot.val()[userItem].phone,
+                                    fullname: snapshot.val()[userItem].firstName + ' ' + snapshot.val()[userItem].lastName
+                                })
+                            }
+                        }
+                    }
+                });
             } else {
-              this.setState({user:null});
-      
+                this.setState({ user: null });
+
             }
-          });
-      
-          const userRef = fire.database().ref('user');
-          userRef.on('value', (snapshot) => {
-            for(let userItem in snapshot.val()) {
-              if (snapshot.val()[userItem].email === this.state.userInfo.email) {
-                this.setState({
-                  userPhone: snapshot.val()[userItem].phone
-                })
-              }
-            }
-          });
+        });
+
+
 
         // Fetch airport data from json
         var arr = []
@@ -87,10 +93,13 @@ class HorizontalForm extends Component {
         this.setState({ address: e.target.value });
 
     }
-
-    handleDateChange = (date) => {
-        this.setState({ date });
+    renderMessage = (e) => {
+        this.props.renderTitle(e);
     }
+
+    handleDateChange = (field, e) => {
+        this.setState({ [field]: e.target.value });
+    };
     handleTransChange = (selectedTrans) => {
         this.setState({ selectedTrans });
     }
@@ -114,12 +123,33 @@ class HorizontalForm extends Component {
                 this.setState({
                     address: res.data.results[0].formatted_address
                 })
-                console.log(
-                    res.data.results[0].formatted_address, this.state.selectedOption, this.state.date, this.state.selectedTrans)
+                console.log(res.data.results[0].formatted_address, this.state.selectedOption, this.state.date, this.state.selectedTrans)
+
+                // Call our ML API
+                axios.post('http://35.247.102.5/predict', {
+                    address: res.data.results[0].formatted_address,
+                    airport: this.state.selectedOption.value,
+                    date: this.state.datetime,
+                    transportation: this.state.selectedTrans.value,
+                    fullname: this.state.fullname
+                })
+                    .then(res2 => {
+                        { this.renderMessage((res2.data).split(".")[1])}
+                        axios.post('http://35.247.102.5/sms', {
+                            number: this.state.userPhone,
+                            body: res2.data
+                        })
+
+                            .then(res3 => {
+                                console.log(res3)
+                            })
+
+                    })
             })
 
-        // Call our ML API
-
+            .catch(err => {
+                alert('There is an error in the input')
+            })
     }
 
     render() {
@@ -153,7 +183,7 @@ class HorizontalForm extends Component {
                             <div className="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Flight Time</label>
-                                    <input value={this.state.email} onChange={this.handleDateChange} type="datetime-local" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                                    <input value={this.state.date} onChange={e => this.handleDateChange('datetime', e)} type="datetime-local" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
                                     <small id="helper" class="form-text">When is the flight time?</small>
                                 </div>
                             </div>
@@ -179,12 +209,12 @@ class HorizontalForm extends Component {
                                 name="isGoing"
                                 type="checkbox"
                                 checked={this.state.isGoing}
-                                style={{marginRight:'.25em'}}
+                                style={{ marginRight: '.25em' }}
                                 required
                                 onChange={this.handleInputChange} />
-                                
-                                <label style={{fontSize:'14px'}}>Text Alert to {this.state.userPhone}</label>
-                                
+
+                            <label style={{ fontSize: '14px' }}>Text Alert to {this.state.userPhone}</label>
+
                         </div>
                     </form>
 
