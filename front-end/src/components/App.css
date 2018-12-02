@@ -10,6 +10,14 @@
   border-radius: 2em;
 }
 
+.formBox {
+  background: #00205b;
+  opacity: 0.9;
+  padding: 1em;
+  color: white;
+  border-radius: 1.5em;
+}
+
 #background-video {
   height: 100%;
   width: 100%;
@@ -37,6 +45,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.no-margin {
+  margin-bottom: 0;
+}
+
+#helper {
+  font-size: 10px;
 }
 
 @keyframes App-logo-spin {

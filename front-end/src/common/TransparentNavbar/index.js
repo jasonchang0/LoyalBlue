@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import fire from '../../config/Fire';
 import './styles.css';
 
-class Navbar extends React.Component {
+class TransparentNavbar extends React.Component {
 
   constructor(props) {
 		super(props);
@@ -18,17 +18,16 @@ class Navbar extends React.Component {
   render() {
 
       return(
-        <div className="navbar">
+        <div className="trans_navbar">
           <div className="logo-container">
           </div>
           
           <div className="left-link-container">
+            <span style={{color:'white'}} onClick={this.handleLogout}>Sign Out</span>
           </div>
   
           <div className="right-link-container">
-            <span style={{color:'white'}} onClick={this.handleLogout}>Sign Out</span>
-            <span style={{color:'white', marginRight:'2em'}} onClick={this.handleLogout}>Edit Profile</span>
-            <span style={{color:'white', marginRight:'2em'}} onClick={this.handleLogout}>Welcome, YJ!</span>  
+
           </div>
         </div>
       );
@@ -36,4 +35,4 @@ class Navbar extends React.Component {
   
 }
 
-export default Navbar;
+export default TransparentNavbar;
