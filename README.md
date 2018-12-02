@@ -42,6 +42,12 @@ The LoyalBlue Membership
 ##Demo
 ####[Link](https://youtu.be/NEwpscTm8lI)
 
+##Snapshots
+![Fig.1] (https://d.pr/i/iQxB7U)
+![Fig.2] (https://d.pr/i/gy0lyK)
+![Fig.3] (https://d.pr/i/ZlOOLM)
+![Fig.4] (https://d.pr/i/AgglZ2)
+
 ## References
 1. Peterson, Barbara. “TSA Knows Its ‘My TSA’ App Is Useless.” Condé Nast Traveler, https://www.cntraveler.com/stories/2016-07-08/tsa-knows-its-my-tsa-app-is-useless. Accessed 2 Dec. 2018.
 
