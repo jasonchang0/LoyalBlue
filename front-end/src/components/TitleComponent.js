@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import fire from './config/Fire';
-import VideoBackground from './assets/video_bg.mp4'
+import fire from '../config/Fire';
+import VideoBackground from '../assets/video_bg.mp4'
 import './App.css';
+import Logo from '../assets/logo.png'
 
 const imgStyle = {
     width: '30%',
@@ -19,7 +20,7 @@ class TitleComponent extends Component {
     return (
     <div style={this.props.style}>
         <div>
-            <img style={imgStyle} src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/JetBlue_Airways_Logo.svg/2000px-JetBlue_Airways_Logo.svg.png'></img>
+            <img style={imgStyle} src={Logo}></img>
         </div>
         <button type="submit" onClick={this.buttonClick} class="btn btn-primary">Begin loyalBlue</button>
     </div>
