@@ -68,12 +68,14 @@ class Home extends Component {
     super(props);
     this.logout.bind(this);
     this.state = {
+      userInfo: '',
       latLngData: null,
       selectedAirport: '',
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
       resultText: '',
+      userPhone: '',
     }
   }
   onMarkerClick = (props, marker, e) =>
@@ -87,7 +89,28 @@ class Home extends Component {
   logout() {
     fire.auth().signOut();
   }
+
   componentDidMount() {
+    fire.auth().onAuthStateChanged((user) => {
+      console.log(user);
+      if (user) {
+        this.setState({userInfo: user});
+      } else {
+        this.setState({user:null});
+
+      }
+    });
+
+    const userRef = fire.database().ref('user');
+    userRef.on('value', (snapshot) => {
+      for(let userItem in snapshot.val()) {
+        if (snapshot.val()[userItem].email === this.state.userInfo.email) {
+          this.setState({
+            userPhone: snapshot.val()[userItem].phone
+          })
+        }
+      }
+    });
     // Fetch airport data from json
     var arr = []
     for (let data in airportLatLng) {
@@ -98,8 +121,8 @@ class Home extends Component {
     })
   }
   render() {
-    console.log(this.state.selectedAirport)
-    if (this.state.latLngData != undefined && this.state.selectedAirport != undefined) {
+    console.log(this.state.userPhone)
+    if (this.state.latLngData != undefined && this.state.selectedAirport != undefined && this.state.userPhone != undefined) {
       return (
         <div>
           <Navbar styles={{ 'marginBottom': '2em' }} />
@@ -130,7 +153,7 @@ class Home extends Component {
               <h1>{this.state.selectedPlace.name}</h1>
             </div>
             </Map>
-            <HorizontalForm selectedApt={this.state.selectedAirport}/>
+            <HorizontalForm phoneNum={this.state.userPhone} selectedApt={this.state.selectedAirport}/>
             <div>
               <h2>{this.state.resultText}</h2>
             </div>

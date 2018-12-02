@@ -21,7 +21,6 @@ class App extends Component {
       console.log(user);
       if (user) {
         this.setState({user});
-
       } else {
         this.setState({user:null});
 

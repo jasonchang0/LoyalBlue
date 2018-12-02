@@ -34,6 +34,8 @@ class HorizontalForm extends Component {
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.state = {
+            userInfo: null,
+            userPhone: '',
             selectedAirport: this.props.selectedAirport,
             selectedOption: null,
             selectedTrans: null,
@@ -47,6 +49,27 @@ class HorizontalForm extends Component {
     }
 
     componentDidMount() {
+        fire.auth().onAuthStateChanged((user) => {
+            console.log(user);
+            if (user) {
+              this.setState({userInfo: user});
+            } else {
+              this.setState({user:null});
+      
+            }
+          });
+      
+          const userRef = fire.database().ref('user');
+          userRef.on('value', (snapshot) => {
+            for(let userItem in snapshot.val()) {
+              if (snapshot.val()[userItem].email === this.state.userInfo.email) {
+                this.setState({
+                  userPhone: snapshot.val()[userItem].phone
+                })
+              }
+            }
+          });
+
         // Fetch airport data from json
         var arr = []
         for (let data in cities['Airports']) {
@@ -94,9 +117,9 @@ class HorizontalForm extends Component {
                 console.log(
                     res.data.results[0].formatted_address, this.state.selectedOption, this.state.date, this.state.selectedTrans)
             })
-        
+
         // Call our ML API
-        
+
     }
 
     render() {
@@ -104,7 +127,7 @@ class HorizontalForm extends Component {
         return (
             <div>
                 <div style={{ 'marginTop': '23em' }} className="container formBox">
-                    <h4 style={{marginBottom:'1em'}}>Tell me where you are going!</h4>
+                    <h4 style={{ marginBottom: '1em' }}>Tell me where you are going!</h4>
                     <form role="form">
                         <div className="row">
                             <div className="col-md-3">
@@ -122,6 +145,7 @@ class HorizontalForm extends Component {
                                         value={selectedAirport}
                                         onChange={this.handleChange}
                                         options={this.state.options}
+                                        required
                                     />
                                     <small id="helper" class="form-text">Where are you taking the flight?</small>
                                 </div>
@@ -150,6 +174,18 @@ class HorizontalForm extends Component {
                         </div>
 
                         <button type="submit" onClick={this.submitForm} class="btn btn-warning">Alert Departure Time</button>
+                        <div>
+                            <input
+                                name="isGoing"
+                                type="checkbox"
+                                checked={this.state.isGoing}
+                                style={{marginRight:'.25em'}}
+                                required
+                                onChange={this.handleInputChange} />
+                                
+                                <label style={{fontSize:'14px'}}>Text Alert to {this.state.userPhone}</label>
+                                
+                        </div>
                     </form>
 
 
