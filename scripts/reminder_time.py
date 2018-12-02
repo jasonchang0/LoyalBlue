@@ -22,8 +22,11 @@ def series_to_dict(series):
     dictionary = series.to_dict()
     # print(dictionary)
 
-    for key in dictionary:
-        dictionary[key] = list(dictionary[key].values())[0]
+    try:
+        for key in dictionary:
+            dictionary[key] = list(dictionary[key].values())[0]
+    except IndexError as e:
+        return {}
 
     return dictionary
 
@@ -79,6 +82,7 @@ def reminder_time(address, airport, transport, departure):
         transport_time = routes[0]['legs'][0]['duration_in_traffic']['value']
     except KeyError as e:
         print('Error: routes -> {}'.format(routes))
+        transport_time = routes[0]['legs'][0]['duration']['value']
 
     classified = pd.read_csv('airport_features.csv')
     # print(classified.head())
@@ -147,8 +151,7 @@ if __name__ == '__main__':
 
         print('Depart by {} to board the flight by {}'.format(start_time, end_time))
 
-        time.sleep(5)
-
+        # time.sleep(5)
 
 
 
