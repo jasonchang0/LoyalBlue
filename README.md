@@ -2,6 +2,9 @@ The LoyalBlue Membership
 =====
 ##Jason Chang, Yong Jin Kim, and Bryen Xie <br/> 2018.11.30 - 12.02 @YHack 2018
 
+##Demo: https://youtu.be/NEwpscTm8lI
+##Website: http://loyalblue.club/
+
 #### Proposed Question: <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*When is the optimal time for me to leave my place of residence to catch a scheduled flight such that my time of boredom waiting at the departure gate is minimized?*
 
 ## Inspiration
